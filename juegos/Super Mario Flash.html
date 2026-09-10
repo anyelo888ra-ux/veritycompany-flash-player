@@ -7,7 +7,7 @@
         body { background-color: #0b0b0f; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
         #player { width: 100%; height: 100vh; }
     </style>
-    <!-- Motor de soporte extendido nativo -->
+    <!-- 🚀 CDN Oficial de Ruffle reparada con la ruta de distribución completa en UNPKG -->
     <script src="https://unpkg.com"></script>
 </head>
 <body>
@@ -16,14 +16,21 @@
 
 <script>
     window.addEventListener("DOMContentLoaded", () => {
+        // Inicializamos el motor nativo desde el objeto global descargado
         const ruffle = window.RufflePlayer.newest();
         const player = ruffle.createPlayer();
         document.getElementById("player").appendChild(player);
         
-        // Jala el SWF preservado externamente para que cargue sin ocupar espacio en tu cuenta
+        // 🎮 CONEXIÓN LOCAL SOBERANA:
+        // Usamos '../' para salir de la carpeta 'juegos' y entrar directo en 'ruffle/' 
+        // a jalar tu archivo super-mario-flash.swf recién creado
         player.load({
-            url: "https://github.io", 
+            url: "../ruffle/super-mario-flash.swf", 
             allowScriptAccess: true
+        }).then(() => {
+            console.log("¡Super Mario Flash cargado con éxito en los servidores de VerityCompany!");
+        }).catch((err) => {
+            console.error("Fallo de emulación:", err);
         });
     });
 </script>
