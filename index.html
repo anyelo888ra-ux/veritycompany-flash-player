@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VerityCompany Flash Player v1.0</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Menú Lateral */
+        #sidebar { width: 300px; background-color: #1e1e1e; border-right: 2px solid #333; display: flex; flex-direction: column; padding: 20px; }
+        #sidebar h1 { font-size: 20px; color: #ff9900; margin-bottom: 5px; text-transform: uppercase; }
+        #sidebar .author { font-size: 12px; color: #888; margin-bottom: 20px; }
+        #sidebar h2 { font-size: 14px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Lista de Juegos */
+        .game-list { list-style: none; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex-grow: 1; }
+        .game-item { background: #2a2a2a; padding: 12px; border-radius: 6px; cursor: pointer; transition: background 0.2s, border-left: 0.2s; border-left: 4px solid transparent; }
+        .game-item:hover { background: #3a3a3a; border-left: 4px solid #ff9900; }
+        .game-item.active { background: #332200; border-left: 4px solid #ff9900; color: #ff9900; font-weight: bold; }
+
+        /* Área Principal del Reproductor */
+        #main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #141414; }
+        #player-title { font-size: 24px; margin-bottom: 15px; color: #eee; }
+        #player-container { width: 800px; height: 600px; background: #000; border: 4px solid #2d2d2d; border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; }
+        
+        /* Pantalla de inicio vacía */
+        .placeholder-text { color: #666; font-size: 18px; text-align: center; padding: 20px; }
+    </style>
+    <!-- Motor Ruffle integrado para ejecutar los archivos .swf -->
+    <script src="https://unpkg.com"></script>
+</head>
+<body>
+
+    <!-- MENÚ LATERAL: Navegación de juegos -->
+    <div id="sidebar">
+        <h1>VerityCompany</h1>
+        <div class="author">Flash Player v1.0 por anyelo888ra-ux</div>
+        
+        <h2>Catálogo de Contenido</h2>
+        <ul class="game-list">
+            <!-- Modifica los "data-swf" con las rutas reales de tus archivos en la carpeta "juegos" -->
+            <li class="game-item" data-swf="juegos/juego1.swf" onclick="loadFlash(this, 'Super Mario Flash')">🕹️ Super Mario Flash</li>
+            <li class="game-item" data-swf="juegos/juego2.swf" onclick="loadFlash(this, 'Sonic Flash')">🕹️ Sonic Flash</li>
+            <li class="game-item" data-swf="juegos/juego3.swf" onclick="loadFlash(this, 'Pacman Retro')">🕹️ Pacman Retro</li>
+            <li class="game-item" data-swf="juegos/animacion1.swf" onclick="loadFlash(this, 'Animación Antigua')">🎬 Animación Clásica</li>
+        </ul>
+    </div>
+
+    <!-- ÁREA PRINCIPAL: El reproductor inteligente -->
+    <div id="main-content">
+        <h2 id="player-title">Selecciona un juego para comenzar</h2>
+        <div id="player-container" id="flash-embed-area">
+            <div class="placeholder-text">VerityCompany Extended Support listo.<br>Por favor, elige un elemento del menú izquierdo.</div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE CONTROL: Intercambia los archivos .swf dinámicamente -->
+    <script>
+        function loadFlash(element, gameName) {
+            // 1. Actualizar estilos del menú
+            document.querySelectorAll('.game-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // 2. Cambiar el título superior
+            document.getElementById('player-title').innerText = gameName;
+
+            // 3. Obtener la ruta del archivo .swf
+            const swfPath = element.getAttribute('data-swf');
+
+            // 4. Limpiar el contenedor e inyectar el nuevo objeto Flash
+            const container = document.getElementById('player-container');
+            container.innerHTML = `<object data="${swfPath}" width="100%" height="100%"></object>`;
+        }
+    </script>
+
+</body>
+</html>
