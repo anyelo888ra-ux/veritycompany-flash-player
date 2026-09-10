@@ -5,206 +5,228 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VerityCompany Flash Player v1.0</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #121212; color: #ffffff; display: flex; height: 100vh; overflow: hidden; }
+        /* Estilos Globales de VerityCompany en modo oscuro */
+        body { background-color: #0b0b0f; color: white; font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 260px; background-color: #13131a; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #23232f; }
+        .brand { font-size: 20px; font-weight: bold; color: #ff9f1c; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .author { color: #555566; font-size: 11px; margin-bottom: 25px; }
         
-        /* Menú Lateral */
-        #sidebar { width: 320px; background-color: #1e1e1e; border-right: 2px solid #333; display: flex; flex-direction: column; padding: 20px; }
-        #sidebar h1 { font-size: 22px; color: #ff9900; margin-bottom: 5px; text-transform: uppercase; }
-        .author { font-size: 12px; color: #888; margin-bottom: 20px; }
+        .btn-create { background-color: #00cc66; color: #0b0b0f; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-align: center; font-size: 13px; margin-bottom: 12px; transition: background 0.2s; width: 100%; }
+        .btn-create:hover { background-color: #00994d; }
         
-        /* Botón de Creación Principal */
-        .create-main-btn { width: 100%; padding: 12px; background: #00cc66; border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; margin-bottom: 20px; font-size: 14px; transition: background 0.2s; }
-        .create-main-btn:hover { background: #00994c; }
+        .btn-config { background-color: #23232f; color: #aaa; padding: 8px; border: 1px solid #3a3a4a; border-radius: 6px; cursor: pointer; font-weight: bold; text-align: center; font-size: 11px; margin-bottom: 25px; transition: all 0.2s; width: 100%; }
+        .btn-config:hover { background-color: #2a2a3a; color: white; border-color: #4cc9f0; }
 
-        h2 { font-size: 14px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .game-list { list-style: none; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex-grow: 1; }
-        .game-item { background: #2a2a2a; padding: 12px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; border-left: 4px solid transparent; align-items: center; }
-        .game-item:hover { background: #3a3a3a; border-left: 4px solid #ff9900; }
-        .game-item.active { background: #332200; border-left: 4px solid #ff9900; color: #ff9900; font-weight: bold; }
-
-        /* Área de Contenido Principal */
-        #main-content { flex-grow: 1; display: flex; flex-direction: column; padding: 20px; background: #141414; position: relative; }
-        #player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; }
-        #player-title { font-size: 24px; color: #eee; }
-        #player-container { width: 800px; height: 600px; background: #000; border: 4px solid #2d2d2d; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto; overflow: hidden; }
-        .placeholder-text { color: #555; font-size: 16px; text-align: center; line-height: 1.5; }
-
-        /* Ventana Emergente (Modal) del Estudio de Creación */
-        #creator-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
-        .modal-box { background: #1e1e1e; border: 2px solid #ff9900; border-radius: 10px; width: 650px; padding: 25px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 0 20px rgba(255, 153, 0, 0.3); }
-        .modal-box h2 { color: #ff9900; font-size: 18px; margin: 0; }
-        .modal-box select, .modal-box input, .modal-box textarea { width: 100%; background: #111; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; font-family: monospace; }
-        .modal-box textarea { height: 150px; resize: none; }
-        .blocks-preview { background: #252525; border: 1px dashed #666; padding: 15px; border-radius: 5px; text-align: center; color: #aaa; }
-        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .btn-save { background: #ff9900; color: #121212; }
-        .btn-cancel { background: #444; color: white; }
+        .folder-title { font-size: 12px; color: #ff9f1c; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .game-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex-grow: 1; }
+        .game-item { padding: 10px; background: #1c1c24; margin-bottom: 8px; border-radius: 6px; font-size: 13px; cursor: pointer; color: #bbb; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
+        .game-item:hover { background: #23232f; color: white; border-left-color: #ff9f1c; }
+        .game-item span.tag { font-size: 9px; background: #23232f; padding: 2px 6px; border-radius: 4px; color: #ff9f1c; font-weight: bold; }
+        
+        .main-viewer { flex-grow: 1; background-color: #0b0b0f; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; position: relative; }
+        .view-title { position: absolute; top: 20px; font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .screen-container { width: 800px; height: 500px; background-color: #13131a; border: 2px dashed #23232f; border-radius: 12px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .screen-placeholder { text-align: center; color: #555566; font-size: 14px; max-width: 400px; line-height: 1.5; }
+        
+        /* Ventana Modal del Laboratorio de Creación */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-box { background: #1c1c24; padding: 30px; border-radius: 14px; width: 480px; box-shadow: 0 8px 30px rgba(0,0,0,0.7); border: 1px solid #ff9f1c; }
+        .modal-box h2 { margin-top: 0; color: #ff9f1c; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; text-align: left; }
+        .form-group label { margin-bottom: 6px; font-size: 13px; font-weight: bold; color: #ddd; }
+        .form-group input, .form-group select, .form-group textarea { padding: 10px; border-radius: 6px; border: 1px solid #333; background: #13131a; color: white; font-family: monospace; font-size: 13px; }
+        .form-group textarea { height: 120px; resize: none; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ff9f1c; outline: none; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
+        .btn-modal { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; text-transform: uppercase; }
+        .btn-cancel { background: #333; color: #ccc; }
+        .btn-save { background: #ff9f1c; color: #0b0b0f; display: flex; align-items: center; gap: 5px; }
+        .btn-save:hover { background: #e08b14; }
     </style>
-    <!-- Motor Ruffle integrado para leer los archivos .swf -->
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
 
-    <!-- MENÚ LATERAL -->
-    <div id="sidebar">
-        <h1>VerityCompany</h1>
+    <!-- Panel de Navegación Lateral -->
+    <div class="sidebar">
+        <div class="brand">VerityCompany</div>
         <div class="author">Flash Player por anyelo888ra-ux</div>
         
-        <!-- BOTÓN MAESTRO DE CREACIÓN -->
-        <button class="create-main-btn" onclick="openCreator()">✨ Crear Nuevo Juego</button>
+        <button class="btn-create" onclick="openLabModal()">✨ Crear Nuevo Juego</button>
+        <button class="btn-config" id="configRepoBtn" onclick="configurarEstructuraSoberana()">⚙️ Conectar mi GitHub</button>
         
-        <h2>Carpeta: juegos/</h2>
-        <ul class="game-list" id="games-container">
-            <!-- Los juegos predeterminados o guardados se inyectarán aquí dinámicamente -->
+        <div class="folder-title">Carpeta: juegos/</div>
+        <ul class="game-list" id="sidebarGames">
+            <!-- Juegos precargados por defecto -->
+            <li class="game-item" onclick="loadProject('juegos/Super Mario Flash.html')">🕹️ Super Mario Flash <span class="tag">SWF</span></li>
+            <li class="game-item" onclick="loadProject('juegos/Sonic Flash.html')">🕹️ Sonic Flash <span class="tag">SWF</span></li>
         </ul>
     </div>
 
-    <!-- ÁREA PRINCIPAL DEL REPRODUCTOR -->
-    <div id="main-content">
-        <div id="player-header">
-            <h2 id="player-title">Estudio VerityCompany</h2>
-        </div>
-        <div id="player-container">
-            <div class="placeholder-text">
-                VerityCompany Extended Support listo.<br>
-                Presiona "Crear Nuevo Juego" o selecciona uno del catálogo lateral.
+    <!-- Visualizador Central de Contenido Multimedia -->
+    <div class="main-viewer">
+        <div class="view-title" id="currentTitle">Estudio VerityCompany</div>
+        <div class="screen-container" id="playerContainer">
+            <div class="screen-placeholder">
+                <p style="color: #ff9f1c; font-weight: bold; font-size: 16px; margin-bottom: 5px;">VerityCompany Extended Support listo.</p>
+                <p>Presiona "Crear Nuevo Juego" o selecciona uno del catálogo lateral.</p>
             </div>
         </div>
     </div>
 
-    <!-- VENTANA EMERGENTE: ESTUDIO DE CREACIÓN -->
-    <div id="creator-modal">
+    <!-- Ventana Modal del Laboratorio de Creación Remota -->
+    <div class="modal-overlay" id="labModal">
         <div class="modal-box">
             <h2>🛠️ Laboratorio de Creación VerityCompany</h2>
             
-            <input type="text" id="asset-name" placeholder="Nombre de tu juego o animación">
+            <div class="form-group">
+                <label for="gameName">Nombre de tu juego o animación:</label>
+                <input type="text" id="gameName" placeholder="Ej. sample" required>
+            </div>
             
-            <label for="asset-type">Método de desarrollo:</label>
-            <select id="asset-type" onchange="toggleCreationMode()">
-                <option value="html">Código HTML Puro</option>
-                <option value="swf">Ruta / URL de archivo .swf</option>
-                <option value="cajistas">Lógica por Bloques (Cajistas)</option>
-            </select>
-
-            <!-- Entrada de Código HTML -->
-            <div id="input-html-container">
-                <textarea id="asset-html-code" placeholder="&lt;h1&gt;Mi juego HTML&lt;/h1&gt;&#10;&lt;p&gt;Escribe tu código interactivo aquí...&lt;/p&gt;"></textarea>
+            <div class="form-group">
+                <label for="devMethod">Método de desarrollo:</label>
+                <select id="devMethod">
+                    <option value="html">Código HTML Puro</option>
+                    <option value="swf">Ruta / URL de archivo .swf</option>
+                    <option value="blocks">Lógica por Bloques (Cajistas)</option>
+                </select>
             </div>
-
-            <!-- Entrada de Ruta SWF -->
-            <div id="input-swf-container" style="display: none;">
-                <input type="text" id="asset-swf-path" placeholder="Ejemplo: juegos/mario.swf o una URL web de un juego">
+            
+            <div class="form-group">
+                <label for="codeArea">Código Fuente / Editor:</label>
+                <textarea id="codeArea">&lt;h1&gt;Mi juego HTML&lt;/h1&gt;&#10;&lt;p&gt;Escribe tu código interactivo aquí...&lt;/p&gt;</textarea>
             </div>
-
-            <!-- Interfaz Simulada de Bloques (Cajistas) -->
-            <div id="input-blocks-container" style="display: none;">
-                <div class="blocks-preview">
-                    🧩 [ Al Presionar Bandera Verde ] ➡️ [ Ejecutar Archivo Flash ] ➡️ [ Bucle Infinito ]
-                    <p style="font-size: 11px; margin-top: 5px; color: #ff9900;">Generador automático de entorno de bloques integrado</p>
-                </div>
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn btn-cancel" onclick="closeCreator()">Cancelar</button>
-                <button class="btn btn-save" onclick="saveNewAsset()">💾 Guardar en juegos/</button>
+            
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" onclick="closeLabModal()">Cancelar</button>
+                <button class="btn-modal btn-save" onclick="processAndSaveGame()">💾 Guardar en juegos/</button>
             </div>
         </div>
     </div>
 
-    <!-- LÓGICA DE CONTROL DEL SISTEMA (JAVASCRIPT) -->
-    <script>
-        // Catálogo inicial por defecto
-        let juegosBase = [
-            { name: "Super Mario Flash", type: "swf", content: "juegos/juego1.swf" },
-            { name: "Sonic Flash", type: "swf", content: "juegos/juego2.swf" }
-        ];
+<script>
+    function openLabModal() {
+        document.getElementById("labModal").style.display = "flex";
+    }
 
-        // Cargar lista al iniciar la página
-        window.onload = function() {
-            loadGamesList();
-        };
+    function closeLabModal() {
+        document.getElementById("labModal").style.display = "none";
+    }
 
-        function loadGamesList() {
-            const container = document.getElementById('games-container');
-            container.innerHTML = "";
-            
-            // Unir la lista fija con las creaciones del localStorage del usuario
-            let guardados = JSON.parse(localStorage.getItem('verity_juegos')) || [];
-            let listaCompleta = [...juegosBase, ...guardados];
+    // Carga los archivos interactivos dentro del contenedor HTML central mediante un iframe
+    function loadProject(url) {
+        const title = url.split('/').pop().replace('.html', '').toUpperCase();
+        document.getElementById("currentTitle").innerText = decodeURIComponent(title);
+        document.getElementById("playerContainer").innerHTML = `
+            <iframe src="${url}" style="width:100%; height:100%; border:none; background:#13131a;"></iframe>
+        `;
+    }
 
-            listaCompleta.forEach((juego) => {
-                const li = document.createElement('li');
-                li.className = "game-item";
-                li.innerHTML = `<span>🕹️ ${juego.name}</span> <small style="color: #666; font-size:10px;">${juego.type.toUpperCase()}</small>`;
-                li.onclick = function() {
-                    // Remover activos anteriores
-                    document.querySelectorAll('.game-item').forEach(item => item.classList.remove('active'));
-                    li.classList.add('active');
-                    ejecutarContenido(juego);
-                };
-                container.appendChild(li);
+    // Sistema de configuración del almacenamiento local
+    function configurarEstructuraSoberana() {
+        const userGithub = prompt("Introduce tu nombre de usuario de GitHub (Ej. anyelo888ra-ux):");
+        const userRepo = prompt("Introduce el nombre de tu repositorio de destino (Ej. veritycompany-flash-player):");
+        const userToken = prompt("Introduce tu Personal Access Token (classic) con permiso 'repo':");
+
+        if (userGithub && userRepo && userToken) {
+            localStorage.setItem("vc_user_github", userGithub.trim());
+            localStorage.setItem("vc_user_repo", userRepo.trim());
+            localStorage.setItem("vc_user_token", userToken.trim());
+            alert("✅ ¡Conexión con tu cuenta de GitHub establecida con éxito!");
+            actualizarTextoBotonConfig();
+        } else {
+            alert("⚠️ Configuración incompleta. Las credenciales no se guardaron.");
+        }
+    }
+
+    function actualizarTextoBotonConfig() {
+        const guardado = localStorage.getItem("vc_user_github");
+        const btn = document.getElementById("configRepoBtn");
+        if(guardado) {
+            btn.innerText = `🔗 Conectado a: ${guardado}`;
+            btn.style.color = "#00cc66";
+            btn.style.borderColor = "#00cc66";
+        } else {
+            btn.innerText = "⚙️ Conectar mi GitHub";
+            btn.style.color = "#aaa";
+            btn.style.borderColor = "#3a3a4a";
+        }
+    }
+
+    // Revisa en el arranque si ya hay un token guardado en el LocalStorage
+    window.onload = actualizarTextoBotonConfig;
+
+    // Procesa el laboratorio y hace el push directo a la API de GitHub
+    async function processAndSaveGame() {
+        const nombreInput = document.getElementById("gameName").value.trim();
+        const codigoCuerpo = document.getElementById("codeArea").value;
+        const metodo = document.getElementById("devMethod").value;
+        
+        if (!nombreInput) {
+            alert("Por favor, introduce un nombre para el archivo.");
+            return;
+        }
+
+        let userGithub = localStorage.getItem("vc_user_github");
+        let userRepo = localStorage.getItem("vc_user_repo");
+        let userToken = localStorage.getItem("vc_user_token");
+
+        if (!userGithub || !userRepo || !userToken) {
+            alert("🐒 Almacenamiento Descentralizado activo:\nNecesitas conectar tu cuenta para guardar este juego en tus propios servidores.");
+            configurarEstructuraSoberana();
+            return;
+        }
+
+        let contenidoHTMLFinal = "";
+        if (metodo === "html") {
+            contenidoHTMLFinal = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{background:#111;color:white;font-family:sans-serif;padding:20px;}</style></head><body>${codigoCuerpo}</body></html>`;
+        } else {
+            contenidoHTMLFinal = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{background:#000;margin:0;display:flex;justify-content:center;align-items:center;height:100vh;}</style><script src="https://unpkg.com/@ruffle-rs/ruffle"><\/script></head><body><div id="player" style="width:100%;height:100vh;"></div><script>window.addEventListener("DOMContentLoaded",()=>{const r=window.RufflePlayer.newest();const p=r.createPlayer();document.getElementById("player").appendChild(p);p.load({url:"${codigoCuerpo}",allowScriptAccess:true});});<\/script></body></html>`;
+        }
+
+        const nombreUrlSegura = nombreInput.toLowerCase().replace(/[^a-z0-9.]/g, "-") + ".html";
+        const rutaCompletaAPI = `https://api.github.com/repos/${userGithub}/${userRepo}/contents/juegos/${nombreUrlSegura}`;
+        const contenidoBase64 = btoa(unescape(encodeURIComponent(contenidoHTMLFinal)));
+
+        try {
+            const respuesta = await fetch(rutaCompletaAPI, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${userToken}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify({
+                    message: `🚀 Juego guardado de forma soberana desde VerityCompany: ${nombreInput}`,
+                    content: contenidoBase64
+                })
             });
-        }
 
-        // Ejecutar el contenido multimedia según su tipo
-        function ejecutarContenido(juego) {
-            document.getElementById('player-title').innerText = juego.name;
-            const screen = document.getElementById('player-container');
-            
-            if (juego.type === "swf") {
-                // Inyectar emulación Ruffle
-                screen.innerHTML = `<object data="${juego.content}" width="100%" height="100%"></object>`;
-            } else if (juego.type === "html" || juego.type === "cajistas") {
-                // Inyectar entorno HTML seguro dentro de un iframe
-                screen.innerHTML = `<iframe srcdoc="${juego.content.replace(/"/g, '&quot;')}" style="width:100%; height:100%; border:none; background:white;"></iframe>`;
+            if (respuesta.status === 201 || respuesta.status === 200) {
+                alert(`¡Éxito total, mano!\nEl archivo se guardó directamente en TU repositorio.\nEstará en vivo en 1 minuto en la ruta:\nhttps://${userGithub}.github.io/${userRepo}/juegos/${nombreUrlSegura}`);
+                closeLabModal();
+                
+                const lista = document.getElementById("sidebarGames");
+                const nuevoItem = document.createElement("li");
+                nuevoItem.className = "game-item";
+                const linkJuego = `https://${userGithub}.github.io/${userRepo}/juegos/${nombreUrlSegura}`;
+                nuevoItem.innerHTML = `🕹️ ${nombreInput} <span class="tag">${metodo.toUpperCase()}</span>`;
+                nuevoItem.onclick = () => loadProject(linkJuego);
+                lista.appendChild(nuevoItem);
+            } else {
+                const errData = await respuesta.json();
+                alert("Error de la API de tu GitHub: " + errData.message);
+                if (respuesta.status === 401) {
+                    alert("⚠️ El token parece inválido. Limpiando credenciales...");
+                    localStorage.clear();
+                    actualizarTextoBotonConfig();
+                }
             }
+        } catch (error) {
+            console.error(error);
+            alert("Error de red al intentar salvar el juego.");
         }
-
-        // Abrir y cerrar el modal
-        function openCreator() { document.getElementById('creator-modal').style.display = 'flex'; }
-        function closeCreator() { document.getElementById('creator-modal').style.display = 'none'; }
-
-        // Intercambiar los campos según la opción seleccionada
-        function toggleCreationMode() {
-            const type = document.getElementById('asset-type').value;
-            document.getElementById('input-html-container').style.display = (type === 'html') ? 'block' : 'none';
-            document.getElementById('input-swf-container').style.display = (type === 'swf') ? 'block' : 'none';
-            document.getElementById('input-blocks-container').style.display = (type === 'cajistas') ? 'block' : 'none';
-        }
-
-        // Guardar la nueva creación en la carpeta virtual
-        function saveNewAsset() {
-            const name = document.getElementById('asset-name').value.trim();
-            const type = document.getElementById('asset-type').value;
-            let content = "";
-            
-            if (!name) { 
-                alert("Por favor asigna un nombre a tu creación."); 
-                return; 
-            }
-            
-            if (type === "html") {
-                content = document.getElementById('asset-html-code').value;
-            } else if (type === "swf") {
-                content = document.getElementById('asset-swf-path').value;
-            } else if (type === "cajistas") {
-                content = '<body style="background:#000; color:#00cc66; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;"><h2>Lógica de Bloques ejecutada exitosamente de forma virtual en juegos/</h2></body>';
-            }
-
-            // Guardar de manera local e interactiva en la memoria del navegador
-            let guardados = JSON.parse(localStorage.getItem('verity_juegos')) || [];
-            guardados.push({ name: name, type: type, content: content });
-            localStorage.setItem('verity_juegos', JSON.stringify(guardados));
-            
-            // Reiniciar campos, cerrar y actualizar lista lateral
-            document.getElementById('asset-name').value = "";
-            document.getElementById('asset-html-code').value = "";
-            document.getElementById('asset-swf-path').value = "";
-            closeCreator();
-            loadGamesList();
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
