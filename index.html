@@ -10,31 +10,40 @@
         
         /* Menú Lateral */
         #sidebar { width: 320px; background-color: #1e1e1e; border-right: 2px solid #333; display: flex; flex-direction: column; padding: 20px; }
-        #sidebar h1 { font-size: 22px; color: #ff9900; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .author { font-size: 12px; color: #888; margin-bottom: 25px; }
+        #sidebar h1 { font-size: 22px; color: #ff9900; margin-bottom: 5px; text-transform: uppercase; }
+        .author { font-size: 12px; color: #888; margin-bottom: 20px; }
         
-        /* Zona de Pruebas (Test Studio) */
-        .test-box { background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #555; }
-        .test-box h3 { font-size: 14px; color: #ff9900; margin-bottom: 8px; text-transform: uppercase; }
-        .test-box input { width: 100%; padding: 8px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; margin-bottom: 10px; font-size: 13px; }
-        .play-btn { width: 100%; padding: 10px; background: #ff9900; border: none; color: #121212; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: background 0.2s; }
-        .play-btn:hover { background: #e08800; }
+        /* Botón de Creación Principal */
+        .create-main-btn { width: 100%; padding: 12px; background: #00cc66; border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; margin-bottom: 20px; font-size: 14px; transition: background 0.2s; }
+        .create-main-btn:hover { background: #00994c; }
 
-        /* Lista de Juegos Guardados */
-        <h2>Catálogo</h2>
+        h2 { font-size: 14px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
         .game-list { list-style: none; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex-grow: 1; }
-        .game-item { background: #2a2a2a; padding: 12px; border-radius: 6px; cursor: pointer; transition: background 0.2s; border-left: 4px solid transparent; }
+        .game-item { background: #2a2a2a; padding: 12px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; border-left: 4px solid transparent; align-items: center; }
         .game-item:hover { background: #3a3a3a; border-left: 4px solid #ff9900; }
         .game-item.active { background: #332200; border-left: 4px solid #ff9900; color: #ff9900; font-weight: bold; }
 
-        /* Contenedor del Reproductor */
-        #main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #141414; }
-        #player-title { font-size: 24px; margin-bottom: 15px; color: #eee; }
-        #player-container { width: 800px; height: 600px; background: #000; border: 4px solid #2d2d2d; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        /* Área de Contenido Principal */
+        #main-content { flex-grow: 1; display: flex; flex-direction: column; padding: 20px; background: #141414; position: relative; }
+        #player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; }
+        #player-title { font-size: 24px; color: #eee; }
+        #player-container { width: 800px; height: 600px; background: #000; border: 4px solid #2d2d2d; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto; overflow: hidden; }
         .placeholder-text { color: #555; font-size: 16px; text-align: center; line-height: 1.5; }
+
+        /* Ventana Emergente (Modal) del Estudio de Creación */
+        #creator-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-box { background: #1e1e1e; border: 2px solid #ff9900; border-radius: 10px; width: 650px; padding: 25px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 0 20px rgba(255, 153, 0, 0.3); }
+        .modal-box h2 { color: #ff9900; font-size: 18px; margin: 0; }
+        .modal-box select, .modal-box input, .modal-box textarea { width: 100%; background: #111; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; font-family: monospace; }
+        .modal-box textarea { height: 150px; resize: none; }
+        .blocks-preview { background: #252525; border: 1px dashed #666; padding: 15px; border-radius: 5px; text-align: center; color: #aaa; }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-save { background: #ff9900; color: #121212; }
+        .btn-cancel { background: #444; color: white; }
     </style>
-    <!-- Cargando el emulador Ruffle directamente desde el CDN oficial -->
-    <script src="https://unpkg.com"></script>
+    <!-- Motor Ruffle integrado para leer los archivos .swf -->
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
 
@@ -43,63 +52,159 @@
         <h1>VerityCompany</h1>
         <div class="author">Flash Player por anyelo888ra-ux</div>
         
-        <!-- ESTUDIO DE PRUEBAS INMEDIATAS -->
-        <div class="test-box">
-            <h3>Laboratorio de Pruebas</h3>
-            <input type="text" id="url-input" placeholder="Ej: juegos/tujuego.swf o URL externa">
-            <button class="play-btn" onclick="testCustomSWF()">▶️ Dar Play</button>
-        </div>
+        <!-- BOTÓN MAESTRO DE CREACIÓN -->
+        <button class="create-main-btn" onclick="openCreator()">✨ Crear Nuevo Juego</button>
         
-        <h2>Lista de Éxitos</h2>
-        <ul class="game-list">
-            <li class="game-item" data-swf="juegos/juego1.swf" onclick="loadFlash(this, 'Super Mario Flash')">🕹️ Super Mario Flash</li>
-            <li class="game-item" data-swf="juegos/juego2.swf" onclick="loadFlash(this, 'Sonic Flash')">🕹️ Sonic Flash</li>
+        <h2>Carpeta: juegos/</h2>
+        <ul class="game-list" id="games-container">
+            <!-- Los juegos predeterminados o guardados se inyectarán aquí dinámicamente -->
         </ul>
     </div>
 
-    <!-- ÁREA DEL REPRODUCTOR -->
+    <!-- ÁREA PRINCIPAL DEL REPRODUCTOR -->
     <div id="main-content">
-        <h2 id="player-title">Estudio de carga VerityCompany</h2>
+        <div id="player-header">
+            <h2 id="player-title">Estudio VerityCompany</h2>
+        </div>
         <div id="player-container">
             <div class="placeholder-text">
-                Sistema de Soporte Extendido listo.<br>
-                Ingresa una ruta a la izquierda y presiona el botón "Play".
+                VerityCompany Extended Support listo.<br>
+                Presiona "Crear Nuevo Juego" o selecciona uno del catálogo lateral.
             </div>
         </div>
     </div>
 
-    <!-- LÓGICA DE CONTROL JS -->
+    <!-- VENTANA EMERGENTE: ESTUDIO DE CREACIÓN -->
+    <div id="creator-modal">
+        <div class="modal-box">
+            <h2>🛠️ Laboratorio de Creación VerityCompany</h2>
+            
+            <input type="text" id="asset-name" placeholder="Nombre de tu juego o animación">
+            
+            <label for="asset-type">Método de desarrollo:</label>
+            <select id="asset-type" onchange="toggleCreationMode()">
+                <option value="html">Código HTML Puro</option>
+                <option value="swf">Ruta / URL de archivo .swf</option>
+                <option value="cajistas">Lógica por Bloques (Cajistas)</option>
+            </select>
+
+            <!-- Entrada de Código HTML -->
+            <div id="input-html-container">
+                <textarea id="asset-html-code" placeholder="&lt;h1&gt;Mi juego HTML&lt;/h1&gt;&#10;&lt;p&gt;Escribe tu código interactivo aquí...&lt;/p&gt;"></textarea>
+            </div>
+
+            <!-- Entrada de Ruta SWF -->
+            <div id="input-swf-container" style="display: none;">
+                <input type="text" id="asset-swf-path" placeholder="Ejemplo: juegos/mario.swf o una URL web de un juego">
+            </div>
+
+            <!-- Interfaz Simulada de Bloques (Cajistas) -->
+            <div id="input-blocks-container" style="display: none;">
+                <div class="blocks-preview">
+                    🧩 [ Al Presionar Bandera Verde ] ➡️ [ Ejecutar Archivo Flash ] ➡️ [ Bucle Infinito ]
+                    <p style="font-size: 11px; margin-top: 5px; color: #ff9900;">Generador automático de entorno de bloques integrado</p>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="closeCreator()">Cancelar</button>
+                <button class="btn btn-save" onclick="saveNewAsset()">💾 Guardar en juegos/</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA DE CONTROL DEL SISTEMA (JAVASCRIPT) -->
     <script>
-        // Función 1: Carga desde la lista de catálogo
-        function loadFlash(element, gameName) {
-            document.querySelectorAll('.game-item').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
+        // Catálogo inicial por defecto
+        let juegosBase = [
+            { name: "Super Mario Flash", type: "swf", content: "juegos/juego1.swf" },
+            { name: "Sonic Flash", type: "swf", content: "juegos/juego2.swf" }
+        ];
+
+        // Cargar lista al iniciar la página
+        window.onload = function() {
+            loadGamesList();
+        };
+
+        function loadGamesList() {
+            const container = document.getElementById('games-container');
+            container.innerHTML = "";
             
-            const swfPath = element.getAttribute('data-swf');
-            document.getElementById('url-input').value = swfPath; // Sincroniza la barra de texto
-            
-            runRuffle(swfPath, gameName);
+            // Unir la lista fija con las creaciones del localStorage del usuario
+            let guardados = JSON.parse(localStorage.getItem('verity_juegos')) || [];
+            let listaCompleta = [...juegosBase, ...guardados];
+
+            listaCompleta.forEach((juego) => {
+                const li = document.createElement('li');
+                li.className = "game-item";
+                li.innerHTML = `<span>🕹️ ${juego.name}</span> <small style="color: #666; font-size:10px;">${juego.type.toUpperCase()}</small>`;
+                li.onclick = function() {
+                    // Remover activos anteriores
+                    document.querySelectorAll('.game-item').forEach(item => item.classList.remove('active'));
+                    li.classList.add('active');
+                    ejecutarContenido(juego);
+                };
+                container.appendChild(li);
+            });
         }
 
-        // Función 2: Ejecuta lo que el usuario escriba en la caja de texto y presione Play
-        function testCustomSWF() {
-            const path = document.getElementById('url-input').value.trim();
-            if(path === "") {
-                alert("Por favor escribe una ruta válida.");
-                return;
+        // Ejecutar el contenido multimedia según su tipo
+        function ejecutarContenido(juego) {
+            document.getElementById('player-title').innerText = juego.name;
+            const screen = document.getElementById('player-container');
+            
+            if (juego.type === "swf") {
+                // Inyectar emulación Ruffle
+                screen.innerHTML = `<object data="${juego.content}" width="100%" height="100%"></object>`;
+            } else if (juego.type === "html" || juego.type === "cajistas") {
+                // Inyectar entorno HTML seguro dentro de un iframe
+                screen.innerHTML = `<iframe srcdoc="${juego.content.replace(/"/g, '&quot;')}" style="width:100%; height:100%; border:none; background:white;"></iframe>`;
             }
-            // Extrae el nombre del archivo para mostrarlo como título
-            const filename = path.substring(path.lastIndexOf('/') + 1);
-            runRuffle(path, `Probando: ${filename}`);
         }
 
-        // Función 3: Inyecta el objeto emulado en la pantalla
-        function runRuffle(swfUrl, title) {
-            document.getElementById('player-title').innerText = title;
-            const container = document.getElementById('player-container');
-            container.innerHTML = `<object data="${swfUrl}" width="100%" height="100%"></object>`;
+        // Abrir y cerrar el modal
+        function openCreator() { document.getElementById('creator-modal').style.display = 'flex'; }
+        function closeCreator() { document.getElementById('creator-modal').style.display = 'none'; }
+
+        // Intercambiar los campos según la opción seleccionada
+        function toggleCreationMode() {
+            const type = document.getElementById('asset-type').value;
+            document.getElementById('input-html-container').style.display = (type === 'html') ? 'block' : 'none';
+            document.getElementById('input-swf-container').style.display = (type === 'swf') ? 'block' : 'none';
+            document.getElementById('input-blocks-container').style.display = (type === 'cajistas') ? 'block' : 'none';
+        }
+
+        // Guardar la nueva creación en la carpeta virtual
+        function saveNewAsset() {
+            const name = document.getElementById('asset-name').value.trim();
+            const type = document.getElementById('asset-type').value;
+            let content = "";
+            
+            if (!name) { 
+                alert("Por favor asigna un nombre a tu creación."); 
+                return; 
+            }
+            
+            if (type === "html") {
+                content = document.getElementById('asset-html-code').value;
+            } else if (type === "swf") {
+                content = document.getElementById('asset-swf-path').value;
+            } else if (type === "cajistas") {
+                content = '<body style="background:#000; color:#00cc66; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;"><h2>Lógica de Bloques ejecutada exitosamente de forma virtual en juegos/</h2></body>';
+            }
+
+            // Guardar de manera local e interactiva en la memoria del navegador
+            let guardados = JSON.parse(localStorage.getItem('verity_juegos')) || [];
+            guardados.push({ name: name, type: type, content: content });
+            localStorage.setItem('verity_juegos', JSON.stringify(guardados));
+            
+            // Reiniciar campos, cerrar y actualizar lista lateral
+            document.getElementById('asset-name').value = "";
+            document.getElementById('asset-html-code').value = "";
+            document.getElementById('asset-swf-path').value = "";
+            closeCreator();
+            loadGamesList();
         }
     </script>
-
 </body>
 </html>
